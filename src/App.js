@@ -1,26 +1,53 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import Flag from './Flag/Flag';
+import ToDoItem from './ToDoItem/ToDoItem';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  state = {
+    input: "change this text",
+    todoList: [
+      {
+        order: 0,
+        timeCreated: 1598148045822,
+        timeFinished: null,
+        completed: false,
+        description: "Create React todo App"
+      },
+      {
+        order: 1,
+        timeCreated: 1598148380431,
+        timeFinished: null,
+        completed: false,
+        description: "Upload to github"
+      },
+      {
+        order: 2,
+        timeCreated: 1598148499197,
+        timeFinished: null,
+        completed: false,
+        description: "Deploy the App to AWS"
+      }      
+    ]
+  };
+
+  changeInputHandler = (event) => {
+    this.setState({
+      input: event.target.value
+    });
+  }
+
+  render() { 
+    const tasks = this.state.todoList.sort((a, b) => a.order - b.order).map(task => <ToDoItem task={task} key={task.timeCreated}/>);
+
+    return(
+      <div className="App">
+        <h1>Hey, It's Art Project #5</h1>
+        <Flag />
+        { tasks }
+      </div>
+    );
+  }
 }
 
 export default App;
