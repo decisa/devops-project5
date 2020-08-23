@@ -1,9 +1,12 @@
-.App {
-  text-align: center;
+.btn-text {
+  font-size: 16px;
+  padding: 6px 8px;
+  margin: 0 5px;
+  line-height: 15px;
 }
 
-.container {
-  height: 80vh;
+.flag {
+  height: 50vh;
   width: 100vw;
   display: flex;
   flex-direction: column;
@@ -15,7 +18,7 @@
 }
 
 
-.container div {
+.flag div {
   display: flex;
   align-items: center;
   height: 20%;
