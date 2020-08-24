@@ -1,3 +1,69 @@
+:root {
+  --light: #999;
+  --dark: #333;
+  --green-light: #52b871;
+  --green-dark: #0f8643;
+  --red: #eb6262;
+}
+.icon {
+  border: 1px solid;
+  border-radius: 3px;
+  padding: 8px;
+  margin: 0 5px;
+  box-sizing: content-box;
+  cursor: pointer;
+  width: 18px !important;
+  height: 18px;
+}
+
+.icon-grey, .icon-grey:active{
+  color: var(--light);
+  border-color: var(--light);
+}
+
+
+.icon-grey:hover{
+  color: #fff;
+  border-color: var(--light);
+  background-color: var(--light);
+}
+
+.icon-red{
+  color: var(--red);
+  border-color: var(--red);
+}
+
+.icon-red:hover{
+  color: #fff;
+  border-color: var(--red);
+  background-color: var(--red);
+}
+
+.icon-green{
+  color: var(--green-light);
+  border-color: var(--green-light);
+}
+
+.icon-green:hover{
+  color: #fff;
+  border-color: var(--green-light);
+  background-color: var(--green-light);
+}
+
+.icon-sm {
+  /* color: var(--dark); */
+  min-width: 25px;
+  width: 25px !important;
+  height: 25px;
+  border: 1px solid;
+  padding: 4px;
+  border-radius: 3px;
+  box-sizing: border-box;
+}
+.checkbox:hover {
+  color: var(--light);
+}
+
 .btn-text {
   font-size: 16px;
   padding: 6px 8px;

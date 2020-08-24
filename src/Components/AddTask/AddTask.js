@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import "./AddTask.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 class AddTask extends Component {
     state = {
@@ -28,14 +29,22 @@ class AddTask extends Component {
         })
     }
 
+    addNewTask = () => {
+        if (this.state.newTask) {
+            this.props.addTask(this.state.newTask, Date.now())
+            this.setState({
+                newTask: ""
+            });
+        } else {
+            document.getElementById('new-task').focus();
+        }
+    }
+
     shortcutsHandler = (e) => {
         switch(e.keyCode) {
             case 13: // Enter
-                console.log(e.target.value)
-                this.props.addTask(e.target.value, Date.now())
-                this.setState({
-                    newTask: ""
-                })
+                // console.log(e.target.value)
+                this.addNewTask();
                 break;
             case 27: // ESC
                 this.toggleEnable();
@@ -51,14 +60,14 @@ class AddTask extends Component {
 
         return (
             <div className={ `row todoitem border ${enabled? "border-success": "border-light"} my-2 py-3 rounded` } >
-                <div className="col-1 todoitem-controls align-self-center justify-items-center">
-                    { enabled ? <span>new task</span> : ""}
+                <div className="col-1 todoitem-controls">
+                    { enabled ? <FontAwesomeIcon icon="plus" className="icon-sm icon-green" onClick={this.addNewTask} /> : ""}
                 </div>
                 <div className="col row no-gutters todoitem-info">
                     { enabled ? (
                         <input 
                             id="new-task"
-                            className="w-100"
+                            className="w-100 pl-3"
                             type="text" 
                             placeholder="describe your task"
                             onKeyDown={ this.shortcutsHandler }
@@ -69,11 +78,13 @@ class AddTask extends Component {
                 <div className="col-4 col-2-md row no-gutters align-self-center justify-content-end">
                     { enabled ? (
                         <>
-                            <button className="btn btn-outline-success btn-text">&#10003;</button>
-                            <button className="btn btn-outline-danger todoitem-delete" title="cancel" onClick={this.toggleEnable} >&#x2300;</button> 
+                            <FontAwesomeIcon icon="check" className="icon icon-green" title="add task" onClick={this.addNewTask}/>
+                            <FontAwesomeIcon icon="ban" className="icon icon-red" title="cancel" onClick={this.toggleEnable}/>
+                            
                         </>
                     ):(
-                        <button className="btn btn-outline-success btn-text" onClick={this.toggleEnable} >+ add task</button>
+                        
+                        <FontAwesomeIcon icon="plus" className="icon icon-green" onClick={this.toggleEnable}/>
                     )}
                     
                     

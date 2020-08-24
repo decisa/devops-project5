@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import './Components/FontAwesomeIcons';
 import Flag from './Components/Flag/Flag';
 import ToDoItem from './Components/ToDoItem/ToDoItem';
 import AddTask from './Components/AddTask/AddTask';
@@ -7,10 +8,14 @@ import ToolBar from './Components/ToolBar/ToolBar';
 
 class App extends Component {
   state = {
-    input: "change this text",
+    settings: {
+      visibility: true,
+      showTime: true
+    },
     todoList: [
       {
         order: 0,
+        id: 1598148045822,
         timeCreated: 1598148045822,
         timeCompleted: null,
         completed: false,
@@ -18,6 +23,7 @@ class App extends Component {
       },
       {
         order: 1,
+        id: 1598148380431,
         timeCreated: 1598148380431,
         timeCompleted: 1598155919779,
         completed: true,
@@ -25,29 +31,52 @@ class App extends Component {
       },
       {
         order: 2,
+        id: 1598148499197,
         timeCreated: 1598148499197,
         timeCompleted: null,
         completed: false,
         description: "Deploy the App to AWS"
+      },
+      {
+        order: 3,
+        id: 1598238567108,
+        timeCreated: 1598238567108,
+        timeCompleted: null,
+        completed: false,
+        description: "Add focus on task edit "
       }      
-    ]
+    ],
+    deleteHistory: []
   };
 
-  changeInputHandler = (event) => {
-    this.setState({
-      input: event.target.value
-    });
-  }
-
-  toggleComplete = (timeCreated) => {
-    let index = this.state.todoList.findIndex(task => task.timeCreated === timeCreated);
+  toggleComplete = (id) => {
+    let index = this.state.todoList.findIndex(task => task.id === id);
     const newList = [...this.state.todoList];
     newList[index] = {
       ...this.state.todoList[index],
-      completed: ! this.state.todoList[index].completed
+      completed: ! this.state.todoList[index].completed,
+      timeCompleted: this.state.todoList[index].completed ? null : Date.now()
     };
     this.setState({
       todoList: newList
+    });
+  }
+
+  toggleVisibilitySetting = () => {
+    this.setState({
+      settings: {
+        ...this.state.settings,
+        visibility: ! this.state.settings.visibility
+      }
+    });
+  }
+
+  toggleTimeSetting = () => {
+    this.setState({
+      settings: {
+        ...this.state.settings,
+        showTime: ! this.state.settings.showTime
+      }
     });
   }
 
@@ -55,6 +84,7 @@ class App extends Component {
     const newToDo = [...this.state.todoList];
     newToDo.push({
       order: this.state.todoList.length,
+      id: timeCreated,
       timeCreated,
       timeCompleted: null,
       completed: false,
@@ -65,24 +95,58 @@ class App extends Component {
     })
   } 
 
-  deleteTask = (timeCreated) => {
-    const index = this.state.todoList.findIndex(task => task.timeCreated === timeCreated);
+  deleteTask = (id) => {
+    const index = this.state.todoList.findIndex(task => task.id === id);
     const newToDo = [...this.state.todoList];
-    let removed = newToDo.splice(index, 1); // remove item from array
+    const removed = newToDo.splice(index, 1); // remove item from array
+
     this.setState({
-      todoList: newToDo
-    });
-    console.log("removed", removed);
+      todoList: newToDo,
+      deleteHistory: this.state.deleteHistory.concat(removed)
+    });    
+  }
+
+  updateTask = (id, value) => {
+    const index = this.state.todoList.findIndex(task => task.id === id);
+    const newToDo = [...this.state.todoList];
+    newToDo[index] = {
+      ...newToDo[index],
+      description: value
+    }
+
+    // console.log(`task ID "${id}", with value "${this.state.todoList[index].description}" is being unpdated with "${value}"`);
+
+    this.setState({
+      todoList: newToDo,
+    });    
+  }
+
+  undoDelete = () => {
+    if (!this.state.deleteHistory.length) {
+      return;
+    }
+
+    const newDeleteHistory = [...this.state.deleteHistory];
+    const item = newDeleteHistory.pop();
+    this.setState({
+      todoList: this.state.todoList.concat([item]),
+      deleteHistory: newDeleteHistory
+    })
   }
 
   render() { 
-    const tasks = this.state.todoList.sort((a, b) => a.order - b.order)
+    const visibility = this.state.settings.visibility;
+    const tasks = this.state.todoList
+      .filter(task => visibility || !task.completed)
+      .sort((a, b) => a.order - b.order)
       .map(task => 
         <ToDoItem 
           task={task} 
-          toggleComplete={this.toggleComplete.bind(this, task.timeCreated)} 
+          settings={this.state.settings}
+          toggleComplete={this.toggleComplete.bind(this, task.id)} 
           key={task.timeCreated}
-          deleteTask={this.deleteTask.bind(this, task.timeCreated)}
+          deleteTask={this.deleteTask.bind(this, task.id)}
+          updateTask={this.updateTask.bind(this, task.id)}
           />
       );
 
@@ -92,7 +156,12 @@ class App extends Component {
         <p className="text-center">by Art Telesh</p>
 
         <div className="container">
-          <ToolBar />
+          <ToolBar 
+            settings={this.state.settings} 
+            toggleVisibility={this.toggleVisibilitySetting} 
+            toggleTime={this.toggleTimeSetting}
+            deleteHistory={this.state.deleteHistory}
+            undoDelete={this.undoDelete} />
           { tasks }
           <AddTask addTask={this.addTask}/>
         </div>

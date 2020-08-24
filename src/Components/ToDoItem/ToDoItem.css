@@ -6,6 +6,9 @@
 } 
 .todoitem-controls {
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-self: center;
 }
 
 .todoitem-desc {
