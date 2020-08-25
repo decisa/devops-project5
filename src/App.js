@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import './App.css';
 import './Components/FontAwesomeIcons';
-import Flag from './Components/Flag/Flag';
+// import Flag from './Components/Flag/Flag';
 import ToDoItem from './Components/ToDoItem/ToDoItem';
 import AddTask from './Components/AddTask/AddTask';
 import ToolBar from './Components/ToolBar/ToolBar';
+// import DB from './server/db';
 
 class App extends Component {
   state = {
@@ -41,10 +42,26 @@ class App extends Component {
         order: 3,
         id: 1598238567108,
         timeCreated: 1598238567108,
+        timeCompleted: 1598328365994,
+        completed: true,
+        description: "Add focus on task edit "
+      },
+      {
+        order: 4,
+        id: 1598328418994,
+        timeCreated: 1598328418994,
         timeCompleted: null,
         completed: false,
-        description: "Add focus on task edit "
-      }      
+        description: "Make data persistent by adding MySQL database"
+      },
+      {
+        order: 5,
+        id: 1598328506876,
+        timeCreated: 1598328506876,
+        timeCompleted: null,
+        completed: false,
+        description: "Add Express.js backend routing"
+      }
     ],
     deleteHistory: []
   };

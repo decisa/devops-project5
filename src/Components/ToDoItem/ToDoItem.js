@@ -1,4 +1,4 @@
-import React, { useState } from  'react';
+import React, { useState, useEffect } from  'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import moment from 'moment';
 import './ToDoItem.css'
@@ -15,6 +15,14 @@ const ToDoItem = (props) => {
         value: description
     })
 
+    // set focus to input if input updated:
+    useEffect(() => {
+        if (editModeState.editMode) {
+            document.getElementById(`edit-${id}`).focus();
+            // console.log('focused');
+        }
+    });
+
     
 
     const changeHandler = (e) => {
@@ -22,7 +30,7 @@ const ToDoItem = (props) => {
             ...editModeState,
             value: e.target.value
         })
-        console.log(e.target.value);
+        // console.log(e.target.value);
     }
 
     const toggleEditMode = () => {
@@ -53,11 +61,14 @@ const ToDoItem = (props) => {
         // console.log(`key: ${e.key}, keyCode: ${e.keyCode}`);
     }
 
+
     // ************** COMPONENT LAYOUT HELPERS **************
+    // "DD MMM'YY, LT"
+    // "YYYY-MM-DD hh:mm:ss"
     const timeInfo = (
         <>
-            <div className="col-6 todoitem-date">date added:<br /><span>{moment(timeCreated).format("DD MMM'YY, LT")}</span></div>
-            { timeCompleted ? <div className="col-6 todoitem-date">date completed:<br /><span>{moment(timeCompleted).format("DD MMM'YY, LT")}</span></div> : null }
+            <div className="col-6 todoitem-date">date added:<br /><span>{moment(timeCreated).format("YYYY-MM-DD hh:mm:ss")}</span></div>
+            { timeCompleted ? <div className="col-6 todoitem-date">date completed:<br /><span>{moment(timeCompleted).format("YYYY-MM-DD hh:mm:ss")}</span></div> : null }
         </>);
 
     const displayDescription = (<span className={"col-12 todoitem-desc" + (completed ? " todoitem-completed": "")}>{description}</span>);
