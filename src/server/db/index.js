@@ -27,7 +27,7 @@ const todoAdd = async (description, sortOrder) => {
 const todoDelete = async (id) => query(`DELETE FROM todo WHERE (id = "${id}");`);
 
 const todoUpdate = async (id, description, sort_order, completed) => {
-    if (completed !== null) {
+    if (completed !== undefined) {
         console.log(`new status for the task should be: ${completed}`);
         return { affectedRows: 0};
     }

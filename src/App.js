@@ -7,6 +7,8 @@ import AddTask from './Components/AddTask/AddTask';
 import ToolBar from './Components/ToolBar/ToolBar';
 // import DB from './server/db';
 
+const todoApiEndpoint = "http://localhost:3000/api/todo"
+
 class App extends Component {
   state = {
     settings: {
@@ -70,7 +72,7 @@ class App extends Component {
   }
 
   fetchTodos = async () => {
-    let allTodos =  await fetch('http://localhost:3000/api/todo/all')
+    let allTodos =  await fetch(todoApiEndpoint + '/all')
       .then(res => res.json());
     // console.log("result:", allTodos.length);
     this.setState({
@@ -131,7 +133,7 @@ class App extends Component {
 
   addTask = async (description) => {
     const sort_order = this.state.todoList.length;
-    const response = await fetch('http://localhost:3000/todos', {
+    const response = await fetch(todoApiEndpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -148,7 +150,7 @@ class App extends Component {
   } 
 
   deleteTask = async (id) => {
-    const response = await fetch('http://localhost:3000/todos', {
+    const response = await fetch(todoApiEndpoint, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
@@ -163,7 +165,7 @@ class App extends Component {
   }
 
   updateTask = async (id, description) => {
-    const response = await fetch('http://localhost:3000/todos', {
+    const response = await fetch(todoApiEndpoint, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -173,6 +175,8 @@ class App extends Component {
         description
       })
     });
+
+    console.log(response);
     if (response.status === 200) {
       this.fetchTodos();
     }    
