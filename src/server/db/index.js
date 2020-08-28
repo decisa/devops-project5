@@ -13,6 +13,8 @@ const query = (sqlQuery) =>
 
 const todoGetAll = async () => query('SELECT * from todo');
 
+const todoGetById = async (id) => query(`SELECT * from todo WHERE (id = "${id}");`);
+
 const todoAdd = async (description, sortOrder) => {
     const timeAdded = moment().format("YYYY-MM-DD HH:mm:ss");
     const sqlQuery = `INSERT INTO todo (description, date_added, sort_order)
@@ -43,7 +45,8 @@ const todoUpdate = async (id, description, sort_order, completed) => {
 
 module.exports = {
     todo: {
-        all: todoGetAll,
+        getAll: todoGetAll,
+        getById: todoGetById,
         add: todoAdd,
         del: todoDelete,
         update: todoUpdate

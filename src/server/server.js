@@ -1,30 +1,31 @@
 const express = require('express');
 const bodyParser = require('body-parser')
-
-
 const { todo } = require('./db');
 
-const app = express();
-const jsonParser = bodyParser.json();
 const port = 5000;
+const app = express();
+// middleware to parse json for requests
+const jsonParser = bodyParser.json();
+
 
 app.get('/api/todo/all', async  (req, res) => {
-    let result = await todo.all();
+    let result = await todo.getAll();
+    res.json(result);
+});
+
+app.get('/api/todo/:id', async  (req, res) => {
+    let result = await todo.getById(req.params.id);
     res.json(result);
 });
 
 app.post('/todos', jsonParser, async  (req, res) => {
-    // console.log(req.body);
     let { description, sort_order } = req.body;
-    // let result = await todo.add();
     let result = await todo.add(description, sort_order);
     res.sendStatus(200);
 });
 
 app.delete('/todos', jsonParser, async  (req, res) => {
-    // console.log(req.body);
     let { id } = req.body;
-    // let result = await todo.add();
     let result = await todo.del(id);
     if (result.affectedRows === 1) {
         console.log(`successfully removed todo ID=${id} from database`);
@@ -36,9 +37,7 @@ app.delete('/todos', jsonParser, async  (req, res) => {
 
 
 app.put('/todos', jsonParser, async  (req, res) => {
-    // console.log(req.body);
     let { id, description, sort_order, completed } = req.body;
-    // let result = await todo.add();
     let result = await todo.update(id, description, sort_order, completed);
     if (result.affectedRows === 1) {
         console.log(`successfully updated todo ID=${id}`);
