@@ -6,7 +6,7 @@ import './ToDoItem.css'
 
 const ToDoItem = (props) => {
 
-    let { timeCreated, timeCompleted, completed, description, id } = props.task;
+    let { date_added, date_completed, completed, description, id } = props.task;
     let { showTime } = props.settings;
 
     // adding state to control edit functionality
@@ -67,11 +67,11 @@ const ToDoItem = (props) => {
     // "YYYY-MM-DD hh:mm:ss"
     const timeInfo = (
         <>
-            <div className="col-6 todoitem-date">date added:<br /><span>{moment(timeCreated).format("YYYY-MM-DD hh:mm:ss")}</span></div>
-            { timeCompleted ? <div className="col-6 todoitem-date">date completed:<br /><span>{moment(timeCompleted).format("YYYY-MM-DD hh:mm:ss")}</span></div> : null }
+            <div className="col-6 todoitem-date">date added:<br /><span>{moment(date_added, "YYYY-MM-DD HH:mm:ss Z").format("YYYY-MM-DD hh:mm:ssa")}</span></div>
+            { date_completed ? <div className="col-6 todoitem-date">date completed:<br /><span>{moment(date_completed, "YYYY-MM-DD HH:mm:ss Z").format("YYYY-MM-DD hh:mm:ssa")}</span></div> : null }
         </>);
 
-    const displayDescription = (<span className={"col-12 todoitem-desc" + (completed ? " todoitem-completed": "")}>{description}</span>);
+    const displayDescription = (<span className={"col-12 todoitem-desc" + (completed ? " todoitem-completed": "")}>{props.number + 1}. {description}</span>);
     const editDescription = (
         <input
             id={`edit-${id}`} 

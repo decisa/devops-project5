@@ -14,59 +14,72 @@ class App extends Component {
       showTime: true
     },
     todoList: [
-      {
-        order: 0,
-        id: 1598148045822,
-        timeCreated: 1598148045822,
-        timeCompleted: null,
-        completed: false,
-        description: "Create React todo App"
-      },
-      {
-        order: 1,
-        id: 1598148380431,
-        timeCreated: 1598148380431,
-        timeCompleted: 1598155919779,
-        completed: true,
-        description: "Upload to github"
-      },
-      {
-        order: 2,
-        id: 1598148499197,
-        timeCreated: 1598148499197,
-        timeCompleted: null,
-        completed: false,
-        description: "Deploy the App to AWS"
-      },
-      {
-        order: 3,
-        id: 1598238567108,
-        timeCreated: 1598238567108,
-        timeCompleted: 1598328365994,
-        completed: true,
-        description: "Add focus on task edit "
-      },
-      {
-        order: 4,
-        id: 1598328418994,
-        timeCreated: 1598328418994,
-        timeCompleted: null,
-        completed: false,
-        description: "Make data persistent by adding MySQL database"
-      },
-      {
-        order: 5,
-        id: 1598328506876,
-        timeCreated: 1598328506876,
-        timeCompleted: null,
-        completed: false,
-        description: "Add Express.js backend routing"
-      }
+      // {
+      //   order: 0,
+      //   id: 1598148045822,
+      //   timeCreated: 1598148045822,
+      //   timeCompleted: null,
+      //   completed: false,
+      //   description: "Create React todo App"
+      // },
+      // {
+      //   order: 1,
+      //   id: 1598148380431,
+      //   timeCreated: 1598148380431,
+      //   timeCompleted: 1598155919779,
+      //   completed: true,
+      //   description: "Upload to github"
+      // },
+      // {
+      //   order: 2,
+      //   id: 1598148499197,
+      //   timeCreated: 1598148499197,
+      //   timeCompleted: null,
+      //   completed: false,
+      //   description: "Deploy the App to AWS"
+      // },
+      // {
+      //   order: 3,
+      //   id: 1598238567108,
+      //   timeCreated: 1598238567108,
+      //   timeCompleted: 1598328365994,
+      //   completed: true,
+      //   description: "Add focus on task edit "
+      // },
+      // {
+      //   order: 4,
+      //   id: 1598328418994,
+      //   timeCreated: 1598328418994,
+      //   timeCompleted: null,
+      //   completed: false,
+      //   description: "Make data persistent by adding MySQL database"
+      // },
+      // {
+      //   order: 5,
+      //   id: 1598328506876,
+      //   timeCreated: 1598328506876,
+      //   timeCompleted: null,
+      //   completed: false,
+      //   description: "Add Express.js backend routing"
+      // }
     ],
     deleteHistory: []
   };
+  componentDidMount() {
+    this.fetchTodos();
+  }
 
-  toggleComplete = (id) => {
+  fetchTodos = async () => {
+    let allTodos =  await fetch('http://localhost:3000/api/todo/all')
+      .then(res => res.json());
+    // console.log("result:", allTodos.length);
+    this.setState({
+      todoList: allTodos
+    });
+     
+  }
+
+  toggleComplete = async (id) => {
     let index = this.state.todoList.findIndex(task => task.id === id);
     const newList = [...this.state.todoList];
     newList[index] = {
@@ -74,6 +87,25 @@ class App extends Component {
       completed: ! this.state.todoList[index].completed,
       timeCompleted: this.state.todoList[index].completed ? null : Date.now()
     };
+
+    let {description, completed} = this.state.todoList[index];
+
+    const response = await fetch('http://localhost:3000/todos', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id,
+        description,
+        completed: !completed
+      })
+    });
+    // if (response.status === 200) {
+    //   this.fetchTodos();
+    // } 
+
+
     this.setState({
       todoList: newList
     });
@@ -97,45 +129,65 @@ class App extends Component {
     });
   }
 
-  addTask = (description, timeCreated) => {
-    const newToDo = [...this.state.todoList];
-    newToDo.push({
-      order: this.state.todoList.length,
-      id: timeCreated,
-      timeCreated,
-      timeCompleted: null,
-      completed: false,
-      description
-    })
-    this.setState({
-      todoList: newToDo
-    })
+  addTask = async (description) => {
+    const sort_order = this.state.todoList.length;
+    const response = await fetch('http://localhost:3000/todos', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        description,
+        sort_order
+      })
+    });
+    if (response.status === 200) {
+      this.fetchTodos();
+    } 
+  
   } 
 
-  deleteTask = (id) => {
-    const index = this.state.todoList.findIndex(task => task.id === id);
-    const newToDo = [...this.state.todoList];
-    const removed = newToDo.splice(index, 1); // remove item from array
-
-    this.setState({
-      todoList: newToDo,
-      deleteHistory: this.state.deleteHistory.concat(removed)
-    });    
+  deleteTask = async (id) => {
+    const response = await fetch('http://localhost:3000/todos', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id
+      })
+    });
+    if (response.status === 200) {
+      this.fetchTodos();
+    }    
   }
 
-  updateTask = (id, value) => {
-    const index = this.state.todoList.findIndex(task => task.id === id);
-    const newToDo = [...this.state.todoList];
-    newToDo[index] = {
-      ...newToDo[index],
-      description: value
-    }
+  updateTask = async (id, description) => {
+    const response = await fetch('http://localhost:3000/todos', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id,
+        description
+      })
+    });
+    if (response.status === 200) {
+      this.fetchTodos();
+    }    
+    // const index = this.state.todoList.findIndex(task => task.id === id);
+    // const newToDo = [...this.state.todoList];
+    // newToDo[index] = {
+    //   ...newToDo[index],
+    //   description: value
+    // }
 
     // console.log(`task ID "${id}", with value "${this.state.todoList[index].description}" is being unpdated with "${value}"`);
 
-    this.setState({
-      todoList: newToDo,
-    });    
+    // this.setState({
+    //   todoList: newToDo,
+    // });    
   }
 
   undoDelete = () => {
@@ -156,12 +208,13 @@ class App extends Component {
     const tasks = this.state.todoList
       .filter(task => visibility || !task.completed)
       .sort((a, b) => a.order - b.order)
-      .map(task => 
+      .map((task, i) => 
         <ToDoItem 
           task={task} 
           settings={this.state.settings}
           toggleComplete={this.toggleComplete.bind(this, task.id)} 
-          key={task.timeCreated}
+          key={task.id}
+          number={i}
           deleteTask={this.deleteTask.bind(this, task.id)}
           updateTask={this.updateTask.bind(this, task.id)}
           />
