@@ -23,13 +23,33 @@ const todoAdd = async (description, sortOrder) => {
     return query(sqlQuery);
 }
 
+const todoRestoreRecord = async (record) => {
+    let { id, description, date_added, date_completed, completed, sort_order } = record;
+    date_added = moment(date_added, "YYYY-MM-DD HH:mm:ss Z").format("\"YYYY-MM-DD HH:mm:ss\"");
+    date_completed = date_completed ? moment(date_completed, "YYYY-MM-DD HH:mm:ss Z").format("\"YYYY-MM-DD HH:mm:ss\"") : "NULL";
+    completed = completed ? 1 : 0;
+
+    const sqlQuery = `INSERT INTO todo 
+        (id, description, date_added, date_completed, completed, sort_order)
+        VALUES ("${id}", "${description}", ${date_added}, ${date_completed}, "${completed}", "${sort_order}");`;
+
+    return query(sqlQuery);
+}
+
 
 const todoDelete = async (id) => query(`DELETE FROM todo WHERE (id = "${id}");`);
 
-const todoUpdate = async (id, description, sort_order, completed) => {
+const todoUpdate = async (id, description, completed) => {
     if (completed !== undefined) {
-        console.log(`new status for the task should be: ${completed}`);
-        return { affectedRows: 0};
+        let date_completed = 'NULL';
+        if (completed) {
+            date_completed = moment().format("\"YYYY-MM-DD HH:mm:ss\"")
+            console.log("date = " , date_completed);
+        }
+        return query(`UPDATE todo
+            SET date_completed = ${date_completed},
+                completed = "${completed ? 1 : 0}"
+            WHERE (id = "${id}");`);
     }
     return query(`UPDATE todo 
         SET description = "${description}"
@@ -49,6 +69,7 @@ module.exports = {
         getById: todoGetById,
         add: todoAdd,
         del: todoDelete,
-        update: todoUpdate
+        update: todoUpdate,
+        restore: todoRestoreRecord
     }
 }

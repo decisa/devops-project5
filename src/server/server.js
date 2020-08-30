@@ -33,19 +33,36 @@ app.delete(todoApiEndpoint, jsonParser, async  (req, res) => {
     } else {
         console.log(`todo ID=${id} was not found. cannot delete`);
     }
+    // console.log(result);
     res.sendStatus(200);
 });
 
 
-app.put(todoApiEndpoint, jsonParser, async  (req, res) => {
-    let { id, description, sort_order, completed } = req.body;
-    let result = await todo.update(id, description, sort_order, completed);
+app.put(todoApiEndpoint + '/update', jsonParser, async  (req, res) => {
+    let { id, description, completed } = req.body;
+    let result = await todo.update(id, description, completed);
+
     if (result.affectedRows === 1) {
         console.log(`successfully updated todo ID=${id}`);
+        res.sendStatus(200);
     } else {
         console.log(`todo ID=${id} was not found. cannot update`);
+        res.sendStatus(400);
     }
-    res.sendStatus(200);
+});
+
+
+app.put(todoApiEndpoint + '/restore', jsonParser, async  (req, res) => {
+    let item = req.body;
+    let result = await todo.restore(item);
+
+    if (result.affectedRows === 1) {
+        console.log(`successfully restored todo ID=${item.id}`);
+        res.sendStatus(200);
+    } else {
+        console.log(`todo ID=${item.id} could not found be restored`);
+        res.sendStatus(400);
+    }
 });
 
 

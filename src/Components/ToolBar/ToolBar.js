@@ -11,7 +11,7 @@ const ToolBar = (props) => {
             className="icon icon-grey"
             title="Make a test API call"
             onClick={() => {
-                fetch('/todos').then(res => res.json())
+                fetch('api/todo/all').then(res => res.json())
                   .then(data => console.log(data));
             }}/>
     );

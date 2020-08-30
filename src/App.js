@@ -83,34 +83,22 @@ class App extends Component {
 
   toggleComplete = async (id) => {
     let index = this.state.todoList.findIndex(task => task.id === id);
-    const newList = [...this.state.todoList];
-    newList[index] = {
-      ...this.state.todoList[index],
-      completed: ! this.state.todoList[index].completed,
-      timeCompleted: this.state.todoList[index].completed ? null : Date.now()
-    };
+    let { completed } = this.state.todoList[index];
 
-    let {description, completed} = this.state.todoList[index];
-
-    const response = await fetch('http://localhost:3000/todos', {
+    const response = await fetch(todoApiEndpoint + '/update', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         id,
-        description,
         completed: !completed
       })
     });
-    // if (response.status === 200) {
-    //   this.fetchTodos();
-    // } 
 
-
-    this.setState({
-      todoList: newList
-    });
+    if (response.status === 200) {
+      this.fetchTodos();
+    }    
   }
 
   toggleVisibilitySetting = () => {
@@ -160,12 +148,16 @@ class App extends Component {
       })
     });
     if (response.status === 200) {
+      let index = this.state.todoList.findIndex(task => task.id === id);
+      this.setState({
+        deleteHistory: this.state.deleteHistory.concat({...this.state.todoList[index]})
+      });
       this.fetchTodos();
     }    
   }
 
   updateTask = async (id, description) => {
-    const response = await fetch(todoApiEndpoint, {
+    const response = await fetch(todoApiEndpoint + '/update', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -180,31 +172,31 @@ class App extends Component {
     if (response.status === 200) {
       this.fetchTodos();
     }    
-    // const index = this.state.todoList.findIndex(task => task.id === id);
-    // const newToDo = [...this.state.todoList];
-    // newToDo[index] = {
-    //   ...newToDo[index],
-    //   description: value
-    // }
-
-    // console.log(`task ID "${id}", with value "${this.state.todoList[index].description}" is being unpdated with "${value}"`);
-
-    // this.setState({
-    //   todoList: newToDo,
-    // });    
+  
   }
 
-  undoDelete = () => {
+  undoDelete = async () => {
     if (!this.state.deleteHistory.length) {
       return;
     }
-
     const newDeleteHistory = [...this.state.deleteHistory];
     const item = newDeleteHistory.pop();
-    this.setState({
-      todoList: this.state.todoList.concat([item]),
-      deleteHistory: newDeleteHistory
-    })
+
+    const response = await fetch(todoApiEndpoint + '/restore', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(item)
+    });
+
+    if (response.status === 200) {
+      console.log('successfully restored item:', item);
+      this.setState({
+        deleteHistory: newDeleteHistory
+      });
+      this.fetchTodos();
+    }
   }
 
   render() { 
