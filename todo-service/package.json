@@ -1,0 +1,19 @@
+{
+  "name": "todo-service",
+  "scripts": {
+    "watch": "babel-watch -L ./src/index.js"
+  },
+  "devDependencies": {
+    "babel-plugin-module-resolver": "^4.0.0",
+    "babel-watch": "^7.0.0"
+  },
+  "dependencies": {
+    "@babel/core": "^7.11.4",
+    "@babel/polyfill": "^7.10.4",
+    "@babel/preset-env": "^7.11.0",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "moment": "^2.27.0",
+    "mysql": "^2.18.1"
+  }
+}
