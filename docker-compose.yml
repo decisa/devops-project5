@@ -1,0 +1,22 @@
+version: "3.4"
+
+services:
+    todo-service:
+        build: 
+            context: "./todo-service"
+        volumes:
+            - ./todo-service:/opt/app
+        depends_on: 
+            - todo-service-db
+        ports: 
+            - 5000:5000
+        environment: 
+            - DB_URI=mysql://root:sqlpass@todo-service-db/project5db?charset=UTF8
+    todo-service-db:
+        environment: 
+            - MYSQL_ROOT_PASSWORD=sqlpass
+            - MYSQL_DATABASE=project5db
+        image: mysql:8.0.21
+        ports: 
+            - 0.0.0.0:7200:3306
+

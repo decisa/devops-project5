@@ -12,5 +12,7 @@ Connection.connect(err => {
     console.log('all good!')
 });
 
+console.log('current connection is: ', Connection);
+
 
 module.exports = Connection;
