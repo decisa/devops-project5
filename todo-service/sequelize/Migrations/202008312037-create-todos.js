@@ -17,7 +17,8 @@ module.exports.up  = (queryInterface, DataTypes) => {
         },
         completedOn: {
             type: DataTypes.DATE,
-            allowNull: true
+            allowNull: true,
+            default: null
         },
         sortOrder: {
             type: DataTypes.INTEGER.UNSIGNED,

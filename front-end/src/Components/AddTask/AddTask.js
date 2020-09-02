@@ -8,12 +8,6 @@ class AddTask extends Component {
         newTask: ""
     };
 
-    componentDidMount() {
-        fetch('/todos')
-            .then(res => res.json())
-            .then(data => console.log(data));
-    }
-
     componentDidUpdate() {
         if (this.state.enabled) {
             document.getElementById('new-task').focus();

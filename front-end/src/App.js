@@ -15,56 +15,7 @@ class App extends Component {
       visibility: true,
       showTime: true
     },
-    todoList: [
-      // {
-      //   order: 0,
-      //   id: 1598148045822,
-      //   timeCreated: 1598148045822,
-      //   timeCompleted: null,
-      //   completed: false,
-      //   description: "Create React todo App"
-      // },
-      // {
-      //   order: 1,
-      //   id: 1598148380431,
-      //   timeCreated: 1598148380431,
-      //   timeCompleted: 1598155919779,
-      //   completed: true,
-      //   description: "Upload to github"
-      // },
-      // {
-      //   order: 2,
-      //   id: 1598148499197,
-      //   timeCreated: 1598148499197,
-      //   timeCompleted: null,
-      //   completed: false,
-      //   description: "Deploy the App to AWS"
-      // },
-      // {
-      //   order: 3,
-      //   id: 1598238567108,
-      //   timeCreated: 1598238567108,
-      //   timeCompleted: 1598328365994,
-      //   completed: true,
-      //   description: "Add focus on task edit "
-      // },
-      // {
-      //   order: 4,
-      //   id: 1598328418994,
-      //   timeCreated: 1598328418994,
-      //   timeCompleted: null,
-      //   completed: false,
-      //   description: "Make data persistent by adding MySQL database"
-      // },
-      // {
-      //   order: 5,
-      //   id: 1598328506876,
-      //   timeCreated: 1598328506876,
-      //   timeCompleted: null,
-      //   completed: false,
-      //   description: "Add Express.js backend routing"
-      // }
-    ],
+    todoList: [],
     deleteHistory: []
   };
   componentDidMount() {
@@ -120,7 +71,7 @@ class App extends Component {
   }
 
   addTask = async (description) => {
-    const sort_order = this.state.todoList.length;
+    const sortOrder = this.state.todoList.length;
     const response = await fetch(todoApiEndpoint, {
       method: 'POST',
       headers: {
@@ -128,7 +79,7 @@ class App extends Component {
       },
       body: JSON.stringify({
         description,
-        sort_order
+        sortOrder
       })
     });
     if (response.status === 200) {
@@ -168,7 +119,7 @@ class App extends Component {
       })
     });
 
-    console.log(response);
+    // console.log(response);
     if (response.status === 200) {
       this.fetchTodos();
     }    
@@ -203,7 +154,7 @@ class App extends Component {
     const visibility = this.state.settings.visibility;
     const tasks = this.state.todoList
       .filter(task => visibility || !task.completed)
-      .sort((a, b) => a.order - b.order)
+      .sort((a, b) => a.sortOrder - b.sortOrder)
       .map((task, i) => 
         <ToDoItem 
           task={task} 

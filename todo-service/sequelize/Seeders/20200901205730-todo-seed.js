@@ -22,7 +22,6 @@ module.exports = {
                 id: 3,
                 description: 'Deploy the App to AWS',
                 completed: false,
-                completedOn: null,
                 sortOrder: 3,
                 createdAt: new Date('2020-08-22 10:08:19'),
                 updatedAt: new Date('2020-08-22 10:08:19')
@@ -54,7 +53,6 @@ module.exports = {
                 id: 21,
                 description: 'Containerize the App',
                 completed: false,
-                completedOn: null,
                 sortOrder: 7,
                 createdAt: new Date('2020-08-28 21:17:11'),
                 updatedAt: new Date('2020-08-28 21:17:11')
@@ -63,7 +61,6 @@ module.exports = {
                 id: 22,
                 description: 'Upload images to Docker Hub',
                 completed: false,
-                completedOn: null,
                 sortOrder: 7,
                 createdAt: new Date('2020-08-28 21:45:20'),
                 updatedAt: new Date('2020-08-28 21:45:20')
@@ -72,7 +69,6 @@ module.exports = {
                 id: 23,
                 description: 'Add Jenkins',
                 completed: false,
-                completedOn: null,
                 sortOrder: 8,
                 createdAt: new Date('2020-08-28 21:45:44'),
                 updatedAt: new Date('2020-08-28 21:45:44')
@@ -81,7 +77,6 @@ module.exports = {
                 id: 24,
                 description: 'Add Linting code pipeline',
                 completed: false,
-                completedOn: null,
                 sortOrder: 9,
                 createdAt: new Date('2020-08-28 21:45:55'),
                 updatedAt: new Date('2020-08-28 21:45:55')
@@ -90,7 +85,6 @@ module.exports = {
                 id: 25,
                 description: 'Build a docker container inside pipeline',
                 completed: false,
-                completedOn: null,
                 sortOrder: 10,
                 createdAt: new Date('2020-08-28 21:46:06'),
                 updatedAt: new Date('2020-08-28 21:46:06')
@@ -99,7 +93,6 @@ module.exports = {
                 id: 26,
                 description: 'Docker container is deployed to K8s cluster',
                 completed: false,
-                completedOn: null,
                 sortOrder: 11,
                 createdAt: new Date('2020-08-28 21:46:45'),
                 updatedAt: new Date('2020-08-28 21:46:45')
@@ -108,7 +101,6 @@ module.exports = {
                 id: 27,
                 description: 'Add blue/green or rolling deployment',
                 completed: false,
-                completedOn: null,
                 sortOrder: 12,
                 createdAt: new Date('2020-08-28 21:47:41'),
                 updatedAt: new Date('2020-08-28 21:47:41')
@@ -117,7 +109,6 @@ module.exports = {
                 id: 28,
                 description: 'Extra: add additional pipelines other than linting',
                 completed: false,
-                completedOn: null,
                 sortOrder: 13,
                 createdAt: new Date('2020-08-28 21:48:11'),
                 updatedAt: new Date('2020-08-28 21:48:11')
@@ -126,7 +117,6 @@ module.exports = {
                 id: 29,
                 description: 'Extra: Perform security scanning of Docker containers',
                 completed: false,
-                completedOn: null,
                 sortOrder: 14,
                 createdAt: new Date('2020-08-28 21:48:38'),
                 updatedAt: new Date('2020-08-28 21:48:38')
@@ -135,7 +125,6 @@ module.exports = {
                 id: 30,
                 description: 'Extra: Post deployment testing of your application',
                 completed: false,
-                completedOn: null,
                 sortOrder: 15,
                 createdAt: new Date('2020-08-28 21:49:02'),
                 updatedAt: new Date('2020-08-28 21:49:02')
