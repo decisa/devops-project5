@@ -1,18 +1,15 @@
-import mysql from 'mysql';
-import config from '#root/config';
+import { Sequelize } from 'sequelize';
 
-const Connection = mysql.createConnection(config.mysql);
+import accessEnv from '#root/helpers/accessEnv';
 
-Connection.connect(err => {
-    
-    if (err) {
-        console.log(err);
-    }
-    else 
-    console.log('all good!')
+const DB_URI = accessEnv('DB_URI');
+
+const sequelize = new Sequelize(DB_URI, {
+    dialectOptions: {
+        charset: "utf8",
+        multipleStatements: true
+    },
+    logging: false
 });
 
-console.log('current connection is: ', Connection);
-
-
-module.exports = Connection;
+export default sequelize;

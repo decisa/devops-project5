@@ -4,4 +4,8 @@ COPY . /opt/app
 
 WORKDIR /opt/app
 
-CMD yarn watch
+# RUN yarn db:migrate
+# RUN yarn db:seed
+
+# CMD yarn watch
+CMD yarn startup

@@ -3,7 +3,11 @@
   "scripts": {
     "db:migrate": "sequelize db:migrate",
     "db:migrate:undo": "sequelize db:migrate:undo",
-    "watch": "babel-watch -L ./src/index.js"
+    "db:seed": "sequelize db:seed:all",
+    "db:seed:undo": "sequelize db:seed:undo",
+    "watch": "babel-watch -L ./src/index.js",
+    "startup": "yarn db:migrate && yarn db:seed && yarn watch"
+
   },
   "devDependencies": {
     "babel-plugin-module-resolver": "^4.0.0",
