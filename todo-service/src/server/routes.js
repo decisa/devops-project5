@@ -20,6 +20,7 @@ export default (app) => {
 
     app.get(todoApiEndpoint + '/all', async (req, res) => {
         const todos = await Todo.findAll();
+        
         return res.json(todos);
     });
 

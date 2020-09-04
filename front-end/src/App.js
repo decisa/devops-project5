@@ -7,7 +7,7 @@ import AddTask from './Components/AddTask/AddTask';
 import ToolBar from './Components/ToolBar/ToolBar';
 // import DB from './server/db';
 
-const todoApiEndpoint = "http://localhost:3000/api/todo"
+const todoApiEndpoint = "/api/todo"
 
 class App extends Component {
   state = {

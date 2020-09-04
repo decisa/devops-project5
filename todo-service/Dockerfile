@@ -8,4 +8,4 @@ WORKDIR /opt/app
 # RUN yarn db:seed
 
 # CMD yarn watch
-CMD yarn startup
+CMD "./wait-for-db.sh"

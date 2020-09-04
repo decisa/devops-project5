@@ -1,7 +1,6 @@
 import React from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
-
 const ToolBar = (props) => {
     const settings = props.settings;
 
@@ -10,9 +9,10 @@ const ToolBar = (props) => {
             icon="network-wired" 
             className="icon icon-grey"
             title="Make a test API call"
-            onClick={() => {
-                fetch('api/todo/all').then(res => res.json())
-                  .then(data => console.log(data));
+            onClick={async () => {
+                let data = await fetch('api/todo/all').then(res => res.json());
+                console.log(data);
+                return data;                
             }}/>
     );
     return (
