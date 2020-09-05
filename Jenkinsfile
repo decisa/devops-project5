@@ -6,7 +6,8 @@ pipeline {
         stage('Development') {
           steps {
             echo 'Test Pipeline !'
-            if (fileExists('docker-compose.yml')) {
+            def dockerComposeExists = fileExists 'docker-compose.yml'
+            if (dockerComposeExists) {
                 echo "docker compose file found"
             } else {
                 echo "!!! docker compose file NOT found !!!"
