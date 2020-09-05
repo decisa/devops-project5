@@ -11,7 +11,7 @@ pipeline {
 
         stage('Docker Compose') {
             when {
-                fileExists 'docker-compose.yml'
+                fileExists(file: 'docker-compose.yml') 
             }
             steps {
                 echo 'Docker compose file Found !!!'
