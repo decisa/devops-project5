@@ -11,7 +11,7 @@ pipeline {
 
         stage('Docker Compose') {
             when {
-                allOf {
+                expression {
                     fileExists(file: 'docker-compose.yml') 
                 }
             }
