@@ -22,6 +22,13 @@ pipeline {
             }
         }
 
+        stage('Docker Compose Test') {
+            when { not { expression { fileExists(file: 'docker-compose2.yml') } } }
+            steps {
+                echo 'Docker compose file NOT found !!! this is not a multi-container app.'
+            }
+        }
+
       }
     }
 
