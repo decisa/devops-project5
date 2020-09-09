@@ -1,6 +1,19 @@
 pipeline {
     agent any
     stages {
+        stage('Example') {
+            input {
+                message "Should we continue?"
+                ok "Yes, we should."
+                submitter "alice,bob"
+                parameters {
+                    string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
+                }
+            }
+            steps {
+                echo "Hello, ${PERSON}, nice to meet you."
+            }
+        }
         stage('Development') {
             parallel {
                 stage('Development') {
@@ -26,13 +39,7 @@ pipeline {
                     when { not { expression { fileExists(file: 'docker-compose2.yml') } } }
                     steps {
                         echo 'Docker compose file NOT found !!! this is not a multi-container app.'
-                        script {
-                            def fields = env.getEnvironment()
-                            fields.each {
-                                key, value -> println("${key} = ${value}");
-                            }
-                            println(env.PATH)
-                        }
+                        sh "printenv"
                     }
                 }
             }
