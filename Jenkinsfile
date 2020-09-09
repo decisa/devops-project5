@@ -49,7 +49,6 @@ pipeline {
             agent {
                 dockerfile {
                     dir 'front-end'
-                    label 'front-end'
                     additionalBuildArgs  '--build-arg version=1.0.0'
                     args "-v ./front-end/nginx/config:/etc/nginx -p 80:80"
                 }
