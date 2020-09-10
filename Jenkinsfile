@@ -47,18 +47,18 @@ pipeline {
             }
         }
 
-        // stage ('Docker') {
-        //     agent {
-        //         dockerfile {
-        //             dir 'front-end'
-        //             additionalBuildArgs  '--build-arg version=1.0.0'
-        //             args "-v ./front-end/nginx/config:/etc/nginx -p 80:80"
-        //         }
-        //     }
-        //     steps {
-        //         sh "ls"
-        //         sh "cd /etc/nginx && ls"
-        //     }
-        // }
+        stage ('Docker') {
+            agent {
+                dockerfile {
+                    dir 'front-end'
+                    additionalBuildArgs  '--build-arg version=1.0.0'
+                    args "-v ./front-end/nginx/config:/etc/nginx -p 80:80"
+                }
+            }
+            steps {
+                sh "ls"
+                sh "cd /etc/nginx && ls"
+            }
+        }
     }
 }
