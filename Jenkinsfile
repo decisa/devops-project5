@@ -11,21 +11,21 @@ pipeline {
             //     }
             // }
             steps {
-                sh  ```
+                sh  '''
                         pwd
                         ls -al
-                    ```
+                    '''
             }
         }
         stage('Build') {
             parallel {
                 stage('Build React App') {
                     steps {
-                        sh ```
+                        sh '''
                             cd front-end
                             yarn build
                             cat ./build/index.html
-                        ```
+                        '''
                     }
                 }
 
