@@ -1,24 +1,31 @@
 pipeline {
     agent any
     stages {
-        stage('Example') {
-            input {
-                message "Should we continue?"
-                ok "Yes, we should."
-                submitter "alice,bob"
-                parameters {
-                    string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
-                }
-            }
+        stage('Checkout') {
+            // input {
+            //     message "Should we continue?"
+            //     ok "Yes, we should."
+            //     submitter "alice,bob"
+            //     parameters {
+            //         string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
+            //     }
+            // }
             steps {
-                echo "Hello, ${PERSON}, nice to meet you."
+                sh  ```
+                        pwd
+                        ls -al
+                    ```
             }
         }
-        stage('Development') {
+        stage('Build') {
             parallel {
-                stage('Development') {
+                stage('Build React App') {
                     steps {
-                        echo 'Test Pipeline !'
+                        sh ```
+                            cd front-end
+                            yarn build
+                            cat ./build/index.html
+                        ```
                     }
                 }
 
@@ -47,18 +54,18 @@ pipeline {
             }
         }
 
-        stage ('Docker') {
-            agent {
-                dockerfile {
-                    dir 'front-end'
-                    additionalBuildArgs  '--build-arg version=1.0.0'
-                    args "-v ./front-end/nginx/config:/etc/nginx -p 80:80"
-                }
-            }
-            steps {
-                sh "ls"
-                sh "cd /etc/nginx && ls"
-            }
-        }
+        // stage ('Docker') {
+        //     agent {
+        //         dockerfile {
+        //             dir 'front-end'
+        //             additionalBuildArgs  '--build-arg version=1.0.0'
+        //             args "-v ./front-end/nginx/config:/etc/nginx -p 80:80"
+        //         }
+        //     }
+        //     steps {
+        //         sh "ls"
+        //         sh "cd /etc/nginx && ls"
+        //     }
+        // }
     }
 }
