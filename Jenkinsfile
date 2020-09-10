@@ -23,6 +23,7 @@ pipeline {
                     steps {
                         sh '''
                             cd front-end
+                            yarn set version berry
                             yarn build
                             cat ./build/index.html
                         '''
