@@ -1,5 +1,10 @@
 pipeline {
     agent any
+    environment {
+        FRONT_END_VERSION = 'v1.0.2'
+        FRONT_END_IMAGE_NAME = 'front-end'
+        DOCKER_USERNAME = 'decisa'
+    }
     stages {
         stage('Checkout') {
             // input {
@@ -17,7 +22,8 @@ pipeline {
                     '''
             }
         }
-        stage('Build') {
+        stage('Build Front End') {
+            
             stages {
                 stage('Build React App') {
                     steps {
@@ -36,7 +42,9 @@ pipeline {
                     steps {
                         sh '''
                             echo "building docker image"
-                            pwd
+                            cd front-end
+                            docker build -t ${DOCKER_USERNAME}/${FRONT_END_IMAGE_NAME}:${FRONT_END_VERSION} .
+                            docker ps -a
                         '''
                     }
                 }
