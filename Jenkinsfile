@@ -4,18 +4,10 @@ pipeline {
         FRONT_END_VERSION = 'v1.0.4'
         FRONT_END_IMAGE_NAME = 'front-end'
         DOCKER_USERNAME = 'decisa'
-        REBUILD_FRONT_END = false
+        REBUILD_FRONT_END = true
     }
     stages {
         stage('Checkout') {
-            // input {
-            //     message "Should we continue?"
-            //     ok "Yes, we should."
-            //     submitter "alice,bob"
-            //     parameters {
-            //         string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
-            //     }
-            // }
             steps {
                 sh  '''
                         pwd
@@ -52,6 +44,25 @@ pipeline {
                             docker build -t ${DOCKER_USERNAME}/${FRONT_END_IMAGE_NAME}:${FRONT_END_VERSION} -t ${DOCKER_USERNAME}/${FRONT_END_IMAGE_NAME}:latest .
                             docker images
                         '''
+                    }
+                }
+                stage('Upload to Docker Hub') {
+                    steps {
+                        withCredentials([usernamePassword(credentialsId: 'art-docker', usernameVariable: 'DOCKER_USR', passwordVariable: 'DOCKER_PWD')]) {
+                            // available as an env variable, but will be masked if you try to print it out any which way
+                            // note: single quotes prevent Groovy interpolation; expansion is by Bourne Shell, which is what you want
+                            sh 'echo $DOCKER_PWD'
+                            // also available as a Groovy variable
+                            echo DOCKER_USR
+                            echo DOCKER_PWD
+                            // or inside double quotes for string interpolation
+                            echo "username is $DOCKER_USR"
+                            sh '''
+                                docker login -u="$DOCKER_USR" -p="$DOCKER_PWD"
+                                docker push ${DOCKER_USERNAME}/${FRONT_END_IMAGE_NAME}:${FRONT_END_VERSION}
+                                docker push ${DOCKER_USERNAME}/${FRONT_END_IMAGE_NAME}:$latest
+                            '''
+                        }
                     }
                 }
 
