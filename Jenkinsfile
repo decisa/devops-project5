@@ -43,8 +43,8 @@ pipeline {
                         sh '''
                             echo "building docker image"
                             cd front-end
-                            docker build -t ${DOCKER_USERNAME}/${FRONT_END_IMAGE_NAME}:${FRONT_END_VERSION} .
-                            docker ps -a
+                            docker build -t ${DOCKER_USERNAME}/${FRONT_END_IMAGE_NAME}:${FRONT_END_VERSION} -t ${DOCKER_USERNAME}/${FRONT_END_IMAGE_NAME}:latest .
+                            docker images
                         '''
                     }
                 }
