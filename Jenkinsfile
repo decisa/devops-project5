@@ -24,8 +24,18 @@ pipeline {
                         sh '''
                             cd front-end
                             yarn set version berry
-                            yarn build
+                            sudo yarn build
                             cat ./build/index.html
+                            echo "current work directory:"
+                            pwd
+                        '''
+                    }
+                }
+                stage('Build Docker Image') {
+                    steps {
+                        sh '''
+                            echo "building docker image"
+                            pwd
                         '''
                     }
                 }
