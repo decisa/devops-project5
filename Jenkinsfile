@@ -58,9 +58,9 @@ pipeline {
                             // or inside double quotes for string interpolation
                             echo "username is $DOCKER_USR"
                             sh '''
-                                docker login -u="$DOCKER_USR" -p="$DOCKER_PWD"
+                                echo $DOCKER_PWD | docker login -u="$DOCKER_USR" --password-stdin
                                 docker push ${DOCKER_USERNAME}/${FRONT_END_IMAGE_NAME}:${FRONT_END_VERSION}
-                                docker push ${DOCKER_USERNAME}/${FRONT_END_IMAGE_NAME}:$latest
+                                docker push ${DOCKER_USERNAME}/${FRONT_END_IMAGE_NAME}:latest
                             '''
                         }
                     }
