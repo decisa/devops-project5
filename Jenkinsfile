@@ -18,13 +18,14 @@ pipeline {
             }
         }
         stage('Build') {
-            parallel {
+            stages {
                 stage('Build React App') {
                     steps {
                         sh '''
                             cd front-end
                             yarn set version berry
-                            sudo yarn build
+                            yarn install
+                            yarn build
                             cat ./build/index.html
                             echo "current work directory:"
                             pwd
