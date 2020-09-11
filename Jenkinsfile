@@ -4,6 +4,7 @@ pipeline {
         FRONT_END_VERSION = 'v1.0.4'
         FRONT_END_IMAGE_NAME = 'front-end'
         DOCKER_USERNAME = 'decisa'
+        REBUILD_FRONT_END = false
     }
     stages {
         stage('Checkout') {
@@ -23,6 +24,11 @@ pipeline {
             }
         }
         stage('Build Front End') {
+            when {
+                expression {
+                    env.REBUILD_FRONT_END.toBoolean() == true
+                }
+            }
             
             stages {
                 stage('Build React App') {
