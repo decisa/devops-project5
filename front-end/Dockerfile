@@ -6,6 +6,8 @@ COPY ./nginx/config /etc/nginx
 
 WORKDIR /usr/share/nginx/html
 
+CMD ["nginx", "-g", "daemon off;"]
+
 # RUN yarn db:migrate
 # RUN yarn db:seed
 

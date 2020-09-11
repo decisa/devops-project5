@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        FRONT_END_VERSION = 'v1.0.2'
+        FRONT_END_VERSION = 'v1.0.3'
         FRONT_END_IMAGE_NAME = 'front-end'
         DOCKER_USERNAME = 'decisa'
     }
