@@ -48,8 +48,12 @@ IP=$(aws ec2 describe-instances \
 
 echo " "
 echo "------------------------------------"
+echo ""
 echo "Jenkins console found here:"
 echo "http://$IP:8080/"
+echo ""
+echo $IP
+echo ""
 echo "------------------------------------"
 
 # --query 'Reservations[*].Instances[*].{id:InstanceId, status:State.Name, tag:Tags[?Key==`Name`].Value}' \
