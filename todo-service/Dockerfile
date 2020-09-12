@@ -4,8 +4,7 @@ COPY . /opt/app
 
 WORKDIR /opt/app
 
-# RUN yarn db:migrate
-# RUN yarn db:seed
+RUN yarn set version berry
+RUN yarn install
 
-# CMD yarn watch
 CMD "./wait-for-db.sh"
