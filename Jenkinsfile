@@ -1,9 +1,9 @@
 pipeline {
     agent any
     environment {
-        REBUILD_FRONT_END = false
+        REBUILD_FRONT_END = true
         REBUILD_DB_SERVICE = false
-        REBUILD_DB_IMAGE = true
+        REBUILD_DB_IMAGE = false
 
         FRONT_END_BUILD = 'v1.0.4'
         FRONT_END_IMAGE_NAME = 'front-end'
