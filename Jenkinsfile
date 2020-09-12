@@ -9,7 +9,7 @@ pipeline {
         FRONT_END_IMAGE_NAME = 'front-end'
 
 		DB_SERVICE_NAME = 'todo-service'
-		DB_SERVICE_BUILD = 'v1.0.0'
+		DB_SERVICE_BUILD = 'v1.0.1'
 
         DB_IMAGE_NAME = "todo-service-db"
         DB_IMAGE_BUILD = 'v1.0.0'
