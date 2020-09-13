@@ -2,7 +2,7 @@ pipeline {
     agent any
     options { buildDiscarder(logRotator(numToKeepStr: '5')) }
     environment {
-        REBUILD_FRONT_END = false
+        REBUILD_FRONT_END = true
         REBUILD_DB_SERVICE = false
         REBUILD_DB_IMAGE = false
 
