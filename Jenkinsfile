@@ -6,7 +6,7 @@ pipeline {
         REBUILD_DB_SERVICE = false
         REBUILD_DB_IMAGE = false
 
-        FRONT_END_BUILD = 'v1.0.5'
+        FRONT_END_BUILD = 'v1.0.6'
         FRONT_END_IMAGE_NAME = 'front-end'
 
 		DB_SERVICE_NAME = 'todo-service'
