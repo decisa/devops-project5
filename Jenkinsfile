@@ -16,6 +16,7 @@ pipeline {
         DB_IMAGE_BUILD = 'v1.0.0'
         
         DOCKER_USERNAME = 'decisa'
+        K8S_CLUSTER_NAME = "capstone-cluster"
     }
     stages {
         stage('Checkout') {
@@ -157,11 +158,14 @@ pipeline {
 
         stage('Deploy App to AWS ') {
             steps {
-                echo "Deploying Backend : MySQL server + DB API server "
-                sh "kubectl apply -f backend.yml"
-                echo "Deploying Frontend : Build version of React App + Loadbalancer "
-                sh "kubectl apply -f frontend.yml"
-                sh "kubectl get all"
+                withAWS(credentials: 'art-aws', region: 'us-west-2') {
+                    sh "aws eks --region us-west-2 update-kubeconfig --name ${K8S_CLUSTER_NAME}"
+                    echo "Deploying Backend : MySQL server + DB API server "
+                    sh "kubectl apply -f backend.yml"
+                    echo "Deploying Frontend : Build version of React App + Loadbalancer "
+                    sh "kubectl apply -f frontend.yml"
+                    sh "kubectl get all"
+                }
             }
         }
     }
