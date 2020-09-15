@@ -8,8 +8,8 @@ services:
             - ./todo-service:/opt/app
         # depends_on: 
         #     - todo-service-db
-        # ports: 
-        #     - 5000:5000
+        ports: 
+            - 5000:5000
         environment: 
             - DB_URI=mysql://root:sqlpass@todo-service-db/project5db?charset=UTF8
             - DB_HOST=todo-service-db
@@ -33,5 +33,6 @@ services:
             - 80:80
             # - 443:443
         volumes:
-            - ./front-end/nginx/config:/etc/nginx
+            - ./front-end/nginx/config:/etc/nginx2
+            - ./front-end:/opt/app
 

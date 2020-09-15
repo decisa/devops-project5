@@ -24,3 +24,8 @@
     color: #777;
     text-decoration: line-through;
 }
+
+.todoitem-info input {
+    background: #3b414f;
+    color: white;
+}
