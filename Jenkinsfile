@@ -6,7 +6,7 @@ pipeline {
         REBUILD_DB_SERVICE = false
         REBUILD_DB_IMAGE = false
 
-        FRONT_END_BUILD = 'v1.0.6'
+        FRONT_END_BUILD = 'v1.1.0'
         FRONT_END_IMAGE_NAME = 'front-end'
 
 		DB_SERVICE_NAME = 'todo-service'
@@ -154,5 +154,15 @@ pipeline {
 				}
 			}
 		}
+
+        stage('Deploy App to AWS ') {
+            steps {
+                echo "Deploying Backend : MySQL server + DB API server "
+                sh "kubectl apply -f backend.yml"
+                echo "Deploying Frontend : Build version of React App + Loadbalancer "
+                sh "kubectl apply -f frontend.yml"
+                sh "kubectl get all"
+            }
+        }
     }
 }
