@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: frontend-lb
+    labels:
+        app: frontend
+spec: #serviceSpec. Spec defines the behavior of a service
+    type: LoadBalancer
+    selector:
+        app: frontend
+    ports:
+    -   name: http
+        port: 80
+        targetPort: 80
+        protocol: TCP
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: frontend
+    labels:
+        app: frontend
+spec:
+    replicas: 1
+    selector:
+        app: frontend
+    template:
+        metadata:
+            labels:
+                app: frontend
+        spec:
+            containers:
+            -   name: frontend
+                image: decisa/frontend:latest
+            nodeSelector:
+                role: frontend
+
