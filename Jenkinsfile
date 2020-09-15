@@ -2,9 +2,10 @@ pipeline {
     agent any
     options { buildDiscarder(logRotator(numToKeepStr: '5')) }
     environment {
-        REBUILD_FRONT_END = true
+        REBUILD_FRONT_END = false
         REBUILD_DB_SERVICE = false
         REBUILD_DB_IMAGE = false
+        AWS_DEPLOY = false
 
         FRONT_END_BUILD = 'v1.1.0'
         FRONT_END_IMAGE_NAME = 'front-end'
@@ -157,6 +158,11 @@ pipeline {
 		}
 
         stage('Deploy App to AWS ') {
+            when {
+                expression {
+                    env.AWS_DEPLOY.toBoolean() == true
+                }
+            }
             steps {
                 withAWS(credentials: 'art-aws', region: 'us-west-2') {
                     sh "aws eks --region us-west-2 update-kubeconfig --name ${K8S_CLUSTER_NAME}"
