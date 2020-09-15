@@ -38,7 +38,7 @@ spec:
         spec:
             containers:
             -   name: frontend
-                image: decisa/frontend:latest
+                image: decisa/front-end:latest
             nodeSelector:
                 role: frontend
 
