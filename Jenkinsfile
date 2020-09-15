@@ -7,7 +7,7 @@ pipeline {
         REBUILD_DB_IMAGE = false
         AWS_DEPLOY = false
         AWS_ROLLING_UPDATE_FRONTEND = true
-        AWS_ROLLING_UPDATE_FRONTEND_V = 'v1.1.0'
+        AWS_ROLLING_UPDATE_FRONTEND_V = 'v1.2.0'
 
         FRONT_END_BUILD = 'v1.2.0'
         FRONT_END_IMAGE_NAME = 'front-end'
