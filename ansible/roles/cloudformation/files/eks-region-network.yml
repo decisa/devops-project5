@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "AWS CF Region Network stack for K8s cluster"
+
+Parameters:
+    VPCCIDRBlock:
+        Description: "VPC CidrBlock"
+        Type: String
+    EKSClusterName:
+        Description: "EKS Cluster Name"
+        Type: String
+Resources:
+
+    VPC:
+        Type: AWS::EC2::VPC
+        Properties:
+            CidrBlock: !Ref VPCCIDRBlock
+            EnableDnsHostnames: true
+            EnableDnsSupport: true
+            Tags:
+              - Key: Name
+                Value: !Join ["-", [ !Ref "AWS::StackName", "vpc" ]]
+              - Key: !Join ["", ["kubernetes.io/cluster/", !Ref EKSClusterName ]]
+                Value: "owned"
+
+    InternetGW:
+        Type: AWS::EC2::InternetGateway
+        Properties:
+            Tags:
+              - Key: Name
+                Value: !Join ["-", [ !Ref "AWS::StackName", "igw" ]]
+
+    IGWAttachment:
+        Type: AWS::EC2::VPCGatewayAttachment
+        Properties:
+            VpcId: !Ref VPC
+            InternetGatewayId: !Ref InternetGW
+
+Outputs:
+    VPCID:
+        Description: "EKS VPC id"
+        Value: !Ref VPC
+    IGWID:
+        Description: "Internet gateway ID"
+        Value: !Ref InternetGW

@@ -1,0 +1,27 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+    name: capstone-cluster
+    region: us-west-2
+
+nodeGroups:
+-   name: frontend
+    labels: { role: frontend }
+    instanceType: t2.medium
+    desiredCapacity: 1
+    minSize: 1
+    maxSize: 3
+    volumeSize: 10
+    volumeType: gp2
+    ssh:
+        publicKeyName: capstone-nodes
+-   name: backend
+    labels: { role: backend }
+    instanceType: t2.medium
+    desiredCapacity: 1
+    minSize: 1
+    maxSize: 2
+    volumeSize: 10
+    volumeType: gp2
+    privateNetworking: true

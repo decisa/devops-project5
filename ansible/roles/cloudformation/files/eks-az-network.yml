@@ -1,0 +1,118 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "AWS CF AZ network stack for K8s"
+
+Parameters:
+    VPCID:
+        Description: "VPC for K8s cluster"
+        Type: String
+    EKSClusterName:
+        Description: "Name of EKS cluster"
+        Type: String
+    PublicSubnetCIDR:
+        Description: "CIDR for public subnet"
+        Type: String
+    PrivateSubnetCIDR:
+        Description: "CIDR for private subnet"
+        Type: String
+    AZ:
+        Description: "Current AZ for which resources need to be created. "
+        Type: String
+    IGWID:
+        Description: "Internet gateway ID"
+        Type: String
+
+Resources:
+    PublicSubnet:
+        Type: AWS::EC2::Subnet
+        Properties:
+            VpcId: !Ref VPCID
+            CidrBlock: !Ref PublicSubnetCIDR
+            AvailabilityZone: !Ref AZ
+            Tags:
+              - Key: Name
+                Value: !Join ["-", [ !Ref "AWS::StackName", "public-net", !Ref AZ ]]
+              - Key: !Join ["", [ "kubernetes.io/cluster/", !Ref EKSClusterName ]]
+                Value: shared
+              - Key: "kubernetes.io/role/elb"
+                Value: 1
+
+    PrivateSubnet:
+        Type: AWS::EC2::Subnet
+        Properties:
+            VpcId: !Ref VPCID
+            CidrBlock: !Ref PrivateSubnetCIDR
+            AvailabilityZone: !Ref AZ
+            Tags:
+              - Key: Name
+                Value: !Join ["-", [ !Ref "AWS::StackName", "private-net", !Ref AZ ]]
+              - Key: !Join ["", [ "kubernetes.io/cluster/", !Ref EKSClusterName ]]
+                Value: shared
+              - Key: "kubernetes.io/role/internal-elb"
+                Value: 1
+
+    NatGwIP:
+        Type: AWS::EC2::EIP
+        Properties:
+            Domain: vpc
+
+    NATGW:
+        DependsOn:  NatGwIP
+        Type: AWS::EC2::NatGateway
+        Properties:
+            AllocationId: !GetAtt NatGwIP.AllocationId
+            SubnetId: !Ref PublicSubnet
+            Tags:
+              - Key: Name
+                Value: !Join [ "-", [!Ref "AWS::StackName", nat-gw, !Ref AZ ]]
+    PublicRouteTable:
+        Type: AWS::EC2::RouteTable
+        Properties:
+            VpcId: !Ref VPCID
+            Tags:
+              - Key: Name
+                Value: !Join [ '-', [!Ref "AWS::StackName", 'public-route-table']]
+    PublicRoute:
+        Type: AWS::EC2::Route
+        Properties:
+            RouteTableId: !Ref PublicRouteTable
+            DestinationCidrBlock: "0.0.0.0/0"
+            GatewayId: !Ref IGWID
+    PublicSubnetRTA:
+        Type: AWS::EC2::SubnetRouteTableAssociation
+        DependsOn: PublicRouteTable
+        Properties:
+            SubnetId: !Ref PublicSubnet
+            RouteTableId: !Ref PublicRouteTable
+    PrivateRouteTable:
+        Type: AWS::EC2::RouteTable
+        Properties:
+            VpcId: !Ref VPCID
+            Tags:
+              - Key: Name
+                Value: !Join [ '-', [!Ref "AWS::StackName", 'private-route-table', !Ref AZ ]]
+    PrivateRoute:
+        Type: AWS::EC2::Route
+        Properties:
+            RouteTableId: !Ref PrivateRouteTable
+            DestinationCidrBlock: "0.0.0.0/0"
+            NatGatewayId: !Ref NATGW
+    PrivateSubnetRTA:
+        Type: AWS::EC2::SubnetRouteTableAssociation
+        DependsOn: PrivateRouteTable
+        Properties:
+            SubnetId: !Ref PrivateSubnet
+            RouteTableId: !Ref PrivateRouteTable
+
+Outputs:
+    StackAZ:
+        Description: "Availability Zone of the stack"
+        Value: !Ref AZ
+    PublicSubnetID:
+        Description: "Publuc subnet ID"
+        Value: !Ref PublicSubnet
+    PrivateSubnetID:
+        Description: "Private subnet ID"
+        Value: !Ref PrivateSubnet
+    NATGWID:
+        Description: "NAT gateway ID for current AZ stack"
+        Value: !Ref NATGW
