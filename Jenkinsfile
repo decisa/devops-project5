@@ -5,7 +5,7 @@ pipeline {
         REBUILD_FRONT_END = false
         REBUILD_DB_SERVICE = false
         REBUILD_DB_IMAGE = false
-        AWS_DEPLOY = true
+        AWS_DEPLOY = false
         AWS_ROLLING_UPDATE_FRONTEND = false
         AWS_ROLLING_UPDATE_FRONTEND_V = 'v1.2.0'
 
@@ -19,8 +19,8 @@ pipeline {
         DB_IMAGE_BUILD = 'v1.0.0'
         
         DOCKER_USERNAME = 'decisa'
-        // K8S_CLUSTER_NAME = "capstone-cluster"
-        K8S_CLUSTER_NAME = "eksctl-capstone-dev-stack"
+        K8S_CLUSTER_NAME = "capstone-cluster"
+        // K8S_CLUSTER_NAME = "eksctl-capstone-dev-stack"
     }
     stages {
         stage('Lint') {
