@@ -1,0 +1,46 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+    name: {{ cf_stack_name }}
+    region: {{ region }}
+
+vpc:
+    id: "{{ vpc_id }}"
+    subnets:
+        public:
+            {{ a_stack_az }}:
+                id: "{{ a_stack_pub_subnet }}"
+            {{ b_stack_az }}:
+                id: "{{ b_stack_pub_subnet }}"
+        private:
+            {{ a_stack_az }}:
+                id: "{{ a_stack_private_subnet }}"
+            {{ b_stack_az }}:
+                id: "{{ b_stack_private_subnet }}"
+    nat:
+        gateway: Disable
+cloudWatch:
+    clusterLogging:
+        enableTypes: ["*"]
+
+nodeGroups:
+-   name: {{ worker_frontend_name }}
+    labels: { role: {{ worker_frontend_name }} }
+    instanceType: {{ worker_frontend_instance_type  }}
+    desiredCapacity: {{ worker_frontend_desired_capacity }}
+    minSize: 1
+    maxSize: 3
+    volumeSize: {{ worker_frontend_volume_size }}
+    volumeType: gp2
+    ssh:
+        publicKeyName: {{ worker_frontend_ssh_key_name }}
+-   name: {{ worker_backend_name }}
+    labels: { role: {{ worker_backend_name }} }
+    instanceType: {{ worker_backend_instance_type }}
+    desiredCapacity: {{ worker_backend_desired_capacity }}
+    minSize: 1
+    maxSize: 2
+    volumeSize: {{ worker_backend_volume_size }}
+    volumeType: gp2
+    privateNetworking: true

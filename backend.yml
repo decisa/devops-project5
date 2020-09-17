@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: todo-service # name of the service
+    labels:
+        app: todo-service
+spec:
+    ports:
+    -   port: 5000
+        protocol: TCP
+    selector:
+        app: todo-service
+        
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: todo-service-db
+    labels:
+        app: todo-service-db
+spec:
+    ports:
+    -   port: 3306
+        protocol: TCP
+    selector:
+        app: todo-service-db
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: backend-db # name of the deployment
+    labels:
+        app: todo-service-db
+spec:  # deployment spec v1. 
+    # can also add minReadySeconds: time to ready after start to become available
+    replicas: 1
+    selector: # label selector for pods. Must match pod template labels
+        matchLabels:
+            app: todo-service-db
+    template: # pod template spec
+        metadata:
+            labels:
+                app: todo-service-db
+        spec: # pod spec
+            # can add volumes here: list of volumes that can be mounted by containers inside pod
+            containers:
+                -   name: mysql # (DNS-LABEL)
+                    image: decisa/todo-service-db:latest
+            nodeSelector:
+                role: backend
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: backend-api # name of the deployment
+    labels:
+        app: todo-service
+spec:  # deployment spec v1. 
+    # can also add minReadySeconds: time to ready after start to become available
+    replicas: 1
+    selector: # label selector for pods. Must match pod template labels
+        matchLabels:
+            app: todo-service
+    template: # pod template spec
+        metadata:
+            labels:
+                app: todo-service
+        spec: # pod spec
+            # can add volumes here: list of volumes that can be mounted by containers inside pod
+            containers:
+                -   name: todo-service # DNS-LABEL
+                    image: decisa/todo-service:latest
+                    ports: # purely informational. port is still accessible if container listens on 0.0.0.0 on that port
+                        -   containerPort: 5000
+            nodeSelector: # node label to determine where to add the pod
+                role: backend

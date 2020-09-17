@@ -1,0 +1,66 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "AWS CF stack for K8s cluster"
+
+Parameters:
+    VPCCIDRBlock:
+        Description: "VPC CidrBlock"
+        Type: String
+        Default: 10.10.0.0/16
+    EKSClusterName:
+        Description: "EKS Cluster Name"
+        Type: String
+        Default: "Capstone-Dev-Cluster"
+Resources:
+    RegionNetworkStack:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: eks-region-network.yml
+            Parameters:
+                VPCCIDRBlock: !Ref VPCCIDRBlock
+                EKSClusterName: !Ref EKSClusterName
+    AZNetworkStackA:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: eks-az-network.yml
+            Parameters:
+                VPCID: !GetAtt RegionNetworkStack.Outputs.VPCID
+                AZ: !Select [ 0, !GetAZs '' ]
+                IGWID: !GetAtt RegionNetworkStack.Outputs.IGWID
+                EKSClusterName: !Ref EKSClusterName
+                PublicSubnetCIDR: !Select [ 0, !Cidr [ !Ref VPCCIDRBlock, 4, 12 ]]
+                PrivateSubnetCIDR: !Select [ 2, !Cidr [ !Ref VPCCIDRBlock, 4, 12 ]]
+    AZNetworkStackB:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: eks-az-network.yml
+            Parameters:
+                VPCID: !GetAtt RegionNetworkStack.Outputs.VPCID
+                AZ: !Select [ 1, !GetAZs '' ]
+                IGWID: !GetAtt RegionNetworkStack.Outputs.IGWID
+                EKSClusterName: !Ref EKSClusterName
+                PublicSubnetCIDR: !Select [ 1, !Cidr [ !Ref VPCCIDRBlock, 4, 12 ]]
+                PrivateSubnetCIDR: !Select [ 3, !Cidr [ !Ref VPCCIDRBlock, 4, 12 ]]
+
+
+Outputs:
+    VPCID:
+        Description: "EKS VPC id"
+        Value: !GetAtt RegionNetworkStack.Outputs.VPCID
+    AStackAZ:
+        Description: "AZ for stack A"
+        Value: !GetAtt AZNetworkStackA.Outputs.StackAZ
+    APublicSubnetID:
+        Description: "Public subnet ID for Stack A"
+        Value: !GetAtt AZNetworkStackA.Outputs.PublicSubnetID
+    APrivateSubnetID:
+        Description: "Private subnet ID for Stack A"
+        Value: !GetAtt AZNetworkStackA.Outputs.PrivateSubnetID
+    BStackAZ:
+        Description: "AZ for stack B"
+        Value: !GetAtt AZNetworkStackB.Outputs.StackAZ
+    BPublicSubnetID:
+        Description: "Public subnet ID for Stack B"
+        Value: !GetAtt AZNetworkStackB.Outputs.PublicSubnetID
+    BPrivateSubnetID:
+        Description: "Private subnet ID for Stack B"
+        Value: !GetAtt AZNetworkStackB.Outputs.PrivateSubnetID

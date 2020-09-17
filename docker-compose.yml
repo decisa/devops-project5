@@ -1,0 +1,38 @@
+version: "3.4"
+
+services:
+    todo-service:
+        build: 
+            context: "./todo-service"
+        volumes:
+            - ./todo-service:/opt/app
+        # depends_on: 
+        #     - todo-service-db
+        ports: 
+            - 5000:5000
+        environment: 
+            - DB_URI=mysql://root:sqlpass@todo-service-db/project5db?charset=UTF8
+            - DB_HOST=todo-service-db
+    todo-service-db:
+        environment: 
+            - MYSQL_ROOT_PASSWORD=sqlpass
+            - MYSQL_DATABASE=project5db
+        image: mysql:8.0.21
+        # ports: 
+        #     - 0.0.0.0:7200:3306
+
+    front-end:
+        build:
+            context: ./front-end
+        container_name: front-end
+        hostname: front-end
+        depends_on: 
+            - todo-service
+        # image: nginx
+        ports:
+            - 80:80
+            # - 443:443
+        volumes:
+            - ./front-end/nginx/config:/etc/nginx2
+            - ./front-end:/opt/app
+

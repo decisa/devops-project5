@@ -1,0 +1,37 @@
+- cloudformation_info:
+    region: "{{ region }}"
+    stack_name: "{{ cf_stack_name }}"
+  register: stack_info
+
+- debug:
+    msg: "{{ stack_info.cloudformation[cf_stack_name].stack_outputs }}"
+
+- set_fact:
+    vpc_id: "{{ stack_info.cloudformation[cf_stack_name].stack_outputs.VPCID }}"
+    a_stack_az: "{{ stack_info.cloudformation[cf_stack_name].stack_outputs.AStackAZ }}"
+    a_stack_pub_subnet: "{{ stack_info.cloudformation[cf_stack_name].stack_outputs.APublicSubnetID }}"
+    a_stack_private_subnet: "{{ stack_info.cloudformation[cf_stack_name].stack_outputs.APrivateSubnetID }}"
+    b_stack_az: "{{ stack_info.cloudformation[cf_stack_name].stack_outputs.BStackAZ }}"
+    b_stack_pub_subnet: "{{ stack_info.cloudformation[cf_stack_name].stack_outputs.BPublicSubnetID }}"
+    b_stack_private_subnet: "{{ stack_info.cloudformation[cf_stack_name].stack_outputs.BPrivateSubnetID }}"
+
+- name: "Generate eks-cluster-config.yml"
+  template:
+    src: "eks-cluster-config.yml.j2"
+    dest: "/tmp/eks-cluster-config.yml"
+
+# figure out whether cluster exists or not
+- name: "Get existing cluster list"
+  shell: "aws --region {{ region }} eks list-clusters --query '[clusters]' --output text"
+  register: clusters_exist
+
+- set_fact:
+    found_clusters: "{{ clusters_exist.stdout.split('\t') }}"
+
+
+- name: "Setting eksctl_action to either create or update"
+  set_fact:
+    eksctl_action: "{{ 'create' if (eks_cluster_name not in found_clusters) else 'update' }}"
+
+- name: "Running eksctl eksctl_action {{ eksctl_action | upper }} with cluster name {{ eks_cluster_name | upper }}"
+  command: "eksctl {{ eksctl_action }} cluster -f /tmp/eks-cluster-config.yml"

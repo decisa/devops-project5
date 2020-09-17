@@ -1,0 +1,14 @@
+-   name: "Create EKS {{ cf_stack_name | upper }} Cloud formation stack"
+    cloudformation:
+        region: "{{ region }}"
+        stack_name: "{{ cf_stack_name }}"
+        state: present
+        disable_rollback: true
+        template: "/tmp/packed-eks-stacks.yml"
+        template_parameters:
+            VPCCIDRBlock: "{{ vpc_cidr_block }}"
+            EKSClusterName: "{{ eks_cluster_name }}"
+        tags:
+            Stack: "{{ cf_stack_name }}"
+            Env: "{{ env }}"
+            EKS-cluster: "{{ eks_cluster_name }}"
