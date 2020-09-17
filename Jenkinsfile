@@ -2,14 +2,14 @@ pipeline {
     agent any
     options { buildDiscarder(logRotator(numToKeepStr: '5')) }
     environment {
-        REBUILD_FRONT_END = false
+        REBUILD_FRONT_END = true
         REBUILD_DB_SERVICE = false
         REBUILD_DB_IMAGE = false
         AWS_DEPLOY = false
-        AWS_ROLLING_UPDATE_FRONTEND = false
-        AWS_ROLLING_UPDATE_FRONTEND_V = 'v1.2.0'
+        AWS_ROLLING_UPDATE_FRONTEND = true
+        AWS_ROLLING_UPDATE_FRONTEND_V = 'v1.1.0'
 
-        FRONT_END_BUILD = 'v1.2.0'
+        FRONT_END_BUILD = 'v1.1.0'
         FRONT_END_IMAGE_NAME = 'front-end'
 
 		DB_SERVICE_NAME = 'todo-service'
