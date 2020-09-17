@@ -13,4 +13,4 @@ WORKDIR /opt/app
 RUN yarn set version berry
 RUN yarn install
 
-CMD "./wait-for-db.sh"
+CMD ["./wait-for-db.sh"]
