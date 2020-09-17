@@ -2,11 +2,11 @@ pipeline {
     agent any
     options { buildDiscarder(logRotator(numToKeepStr: '5')) }
     environment {
-        REBUILD_FRONT_END = false
-        REBUILD_DB_SERVICE = false
-        REBUILD_DB_IMAGE = false
-        AWS_DEPLOY = false
-        AWS_ROLLING_UPDATE_FRONTEND = true
+        REBUILD_FRONT_END = true
+        REBUILD_DB_SERVICE = true
+        REBUILD_DB_IMAGE = true
+        AWS_DEPLOY = true
+        AWS_ROLLING_UPDATE_FRONTEND = false
         AWS_ROLLING_UPDATE_FRONTEND_V = 'v1.2.0'
 
         FRONT_END_BUILD = 'v1.2.0'
@@ -19,14 +19,14 @@ pipeline {
         DB_IMAGE_BUILD = 'v1.0.0'
         
         DOCKER_USERNAME = 'decisa'
-        K8S_CLUSTER_NAME = "capstone-cluster"
+        // K8S_CLUSTER_NAME = "capstone-cluster"
+        K8S_CLUSTER_NAME = "eksctl-eksctl-capstone-dev-stack-cluster"
     }
     stages {
-        stage('Checkout') {
+        stage('Lint') {
             steps {
                 sh  '''
-                        pwd
-                        ls -al
+                        make lint
                     '''
             }
         }
@@ -177,7 +177,7 @@ pipeline {
             }
         }
         
-        stage('Rolling Update for FrontEnd App: AWS ') {
+        stage('Rolling Update of FrontEnd App: AWS ') {
             when {
                 expression {
                     env.AWS_ROLLING_UPDATE_FRONTEND.toBoolean() == true
